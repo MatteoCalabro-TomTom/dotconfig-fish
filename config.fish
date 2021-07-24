@@ -1,46 +1,27 @@
 set fish_greeting
 
 # PATH first
-set -l paths \
-  "{$HOME}/.cargo" \
-  "{$HOME}/.bin" \
-  "{$HOME}/.local/bin" \
-  "/usr/local/sbin" \
-  "/usr/local/opt/openssl@1.1/bin" \
+set -l brew_openssl_path /usr/local/opt/openssl@1.1
+test -e $brew_openssl_path && fish_add_path $brew_openssl_path/bin
 
+set -l brew_node_path /usr/local/opt/node@14 || true
+test -e $brew_node_path && fish_add_path $brew_node_path/bin || true
 
-for path in $paths
-  test -d $path && set -g fish_user_paths $path $fish_user_paths || true
+## Java
+set -l brew_java_path /usr/local/opt/java || true
+if test -e $brew_java_path
+  fish_add_path $brew_java_path/bin
+  set -gx CPPFLAGS "-I$brew_java_path/include"
 end
 
-type -q go && set -g fish_user_paths (go env GOPATH)/bin $fish_user_paths || true
+type -q cargo && fish_add_path {$HOME}/.cargo/bin || true
+type -q go && fish_add_path (go env GOPATH)/bin || true
 
-# Then completions
-type -q zoxide && zoxide init fish | source || true
+## Then completions
 type -q direnv && direnv hook fish | source || true
-type -q starship && starship init fish | source || true
-type -q deno && deno completions fish | source || true
 
-# iTerm2
-set -l iterm2_shell_integration {$HOME}/.iterm2_shell_integration.fish
-test -e $iterm2_shell_integration && source $iterm2_shell_integration || true
+set -gx GPG_TTY (tty)
 
-# fundle manager: https://github.com/danhper/fundle
-if not functions -q fundle; eval (curl -sfL https://git.io/fundle-install); end
-
-# fundle plugins
-set -l plugins \
-  'edc/bass' \
-  'laughedelic/pisces' \
-  'FabioAntunes/fish-nvm' \
-  # 'reitzig/sdkman-for-fish' \
-  'acomagu/fish-async-prompt' \
-
-
-for plugin in $plugins
-  fundle plugin $plugin
-end
-fundle init
-
-# Added by Krypton
-set -x GPG_TTY (tty)
+## iTerm2
+# set -l iterm2_shell_integration {$HOME}/.iterm2_shell_integration.fish
+# test -e $iterm2_shell_integration && source $iterm2_shell_integration || true
