@@ -1,4 +1,4 @@
-**/*
-!.gitignore
-!config.fish
-!conf.d/rust_toolbox.fish
+completions/
+functions/
+
+fish_variables

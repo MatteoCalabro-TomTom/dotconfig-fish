@@ -2,7 +2,7 @@ set fish_greeting
 eval (/opt/homebrew/bin/brew shellenv)
 
 set -l cargo_home {$HOME}/.cargo
-set -l brew_libressl_path {$HOMEBREW_PREFIX}/opt/libressl
+set -l brew_libressl_path {$HOMEBREW_PRE FIX}/opt/libressl
 
 set -gx EDITOR "zed --wait"
 set -gx LDFLAGS "-L$brew_libressl_path/lib"
